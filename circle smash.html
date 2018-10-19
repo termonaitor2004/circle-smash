@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="../jquery.js"></script>
+<script> 
+ $('document').ready(function(){
+	   function move(){
+	       var circles = $('.circle');
+	   
+	        for(var i=0; i < circles.length; i++){
+			var x = Math.floor( Math.random() * 100 );
+			var y = Math.floor( Math.random() * 100 );
+			
+			x = x + "%";
+			y = y + "%";
+			
+			var circle = circles[i];
+			$(circle).css("top", y).css("left", x);
+		}	
+	   
+	} 
+	
+	$('.circle').on('click', function() {
+	
+	
+	if( $(this).is('#red') ){
+	var score = 100;
+	}else{
+	var score = 10;
+	}
+	var currentScore = localStorage.getItem('currentScore');
+	if(currentScore){
+	   currentScore = parseInt(currentScore) + score;
+	}else{
+	      currentScore = score;
+	}
+	
+	
+	 localStorage.setItem('currentScore', currentScore);
+	 checkHighScore();
+	 displayScores();
+});
+
+function checkHighScore(){
+if(localStorage.getItem('highScore') ){
+var highScore = localStorage.getItem('highScore');
+
+}else{
+ var highScore = 0
+}
+var currentScore =  localStorage.getItem('currentScore');
+
+if( parseInt(currentScore) > parseInt(highScore) ){
+localStorage.setItem('highScore', currentScore);
+}
+
+}
+
+
+	function displayScores(){
+	var scoreTodisplay;
+	
+	if(localStorage.getItem('currentScore') ){
+	scoreTodisplay = localStorage.getItem('currentScore');
+	}else{
+	scoreTodisplay = 0;
+	}
+	$('#currentScore').text(scoreTodisplay);
+	
+	if(localStorage.getItem('highScore') ){
+	scoreTodisplay = localStorage.getItem('highScore');
+	}else{
+	scoreTodisplay = 0;
+	}
+	$('#highScore').text(scoreTodisplay);
+	
+	}
+	
+	
+	function timer(){
+	var currentTime = $('#timer').text();
+	currentTime = parseInt(currentTime);
+	currentTime--;
+	
+	if(currentTime < 0){
+	endGame();
+	}else{
+	 $('#timer').text(currentTime);
+	}
+	
+	}
+	function endGame(){
+	$('.circle').unbind();
+	clearInterval(moveInterval);
+	$('#playagain').show();
+	}
+	$('#playagain').on('click', function (){
+	location.reload();
+	});
+	
+	
+	
+	
+    move();	
+	 localStorage.setItem('currentScore',0)
+	 displayScores();
+  var moveInterval = setInterval(move, 1000);
+	setInterval(timer,2000);
+});
+
+
+</script>
+  
+
+
+<style>
+.circle{
+    background-color:black;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    position: absolute;
+}
+
+#red{
+background-color: red;
+
+
+}
+#playagain{
+display: none;
+}
+     
+}
+
+
+</style>
+
+
+
+
+</head>
+<body>
+<h1>circle SMASH!</h1>
+      
+<div id="scorses">
+	<p>Current Scorez: <span id="currentScore">0</span></p>
+	<p>high Scorez: <span id="highScore">0</span></p>
+</div>
+<div>
+<p>timer: <span id="timer">5</span></p>
+
+<div class="circle"></div>
+<div class="circle" id="red"></div>
+<div class="circle"></div>
+
+<button type="button" id="playagain">play again/</button>
+
+
+
+
+</body>
+
+
+
+</html>
